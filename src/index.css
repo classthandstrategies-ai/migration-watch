@@ -1,0 +1,96 @@
+@import 'tailwindcss';
+
+/*
+ * Evergreen design tokens (see DESIGN.md). Warm linen canvas, bone cards,
+ * ink-black actions, a single sage-mint botanical accent, editorial serif
+ * headlines (Playfair Display standing in for IvyPresto) over Rubik body.
+ */
+@theme {
+  --color-linen-canvas: #edede2;
+  --color-bone-card: #fffff3;
+  --color-pure-white: #ffffff;
+  --color-ink-black: #000000;
+  --color-charcoal: #333333;
+  --color-sage-mint: #beedc0;
+  /* A deeper sage, derived from the accent, used only for fine track lines
+     and legibility where the pale mint would disappear on cream. */
+  --color-sage-deep: #5a8f63;
+  --color-ocean-ink: #2f5d6e;
+
+  --font-display: 'Playfair Display', ui-serif, Georgia, serif;
+  --font-rubik: 'Rubik', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --text-caption: 12px;
+  --text-body-sm: 17px;
+  --text-body: 19px;
+  --text-subheading-sm: 21px;
+  --text-subheading: 23px;
+  --text-heading-sm: 30px;
+  --text-heading: 54px;
+  --text-display: 74px;
+
+  --radius-cards: 10px;
+  --radius-buttons: 40.5px;
+  --radius-tags: 46px;
+  --radius-inputs: 7px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-linen-canvas);
+  color: var(--color-ink-black);
+  font-family: var(--font-rubik);
+  font-size: var(--text-body-sm);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Headlines always use the editorial serif — never a sans (DESIGN.md). */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* Range input styled as a hairline track with an ink-black thumb, in keeping
+   with the monochrome, pill-shaped language of the system. */
+.timeline-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 2px;
+  background: var(--color-charcoal);
+  border-radius: 999px;
+  outline: none;
+  cursor: pointer;
+}
+.timeline-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--color-ink-black);
+  border: 3px solid var(--color-bone-card);
+  cursor: pointer;
+}
+.timeline-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--color-ink-black);
+  border: 3px solid var(--color-bone-card);
+  cursor: pointer;
+}
+
+/* The traced migration path animates its dash as progress advances. */
+@keyframes dash-pulse {
+  to {
+    stroke-dashoffset: -12;
+  }
+}
