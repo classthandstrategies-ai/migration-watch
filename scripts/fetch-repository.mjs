@@ -131,13 +131,67 @@ const TARGETS = [
       'Renowned for migrating over the Himalaya at extreme altitude between Central Asian breeding lakes and South Asian wintering grounds.',
   },
   {
-    id: 'stork_black',
-    query: 'black stork',
-    match: 'stork',
-    common: 'Black Stork',
-    region: 'Europe ↔ Africa',
+    id: 'bar_tailed_godwit',
+    query: 'bar-tailed godwit',
+    match: 'bar-tailed',
+    common: 'Bar-tailed Godwit',
+    region: 'Alaska ↔ New Zealand (Pacific)',
     blurb:
-      'A shy forest stork that migrates between European breeding forests and African wintering grounds along eastern and western flyways.',
+      'Holder of the longest known non-stop flight of any bird — over a week aloft across the open Pacific between Alaska and New Zealand.',
+  },
+  {
+    id: 'bar_headed_goose',
+    query: 'bar-headed goose',
+    match: 'bar-headed',
+    common: 'Bar-headed Goose',
+    region: 'Central ↔ South Asia (over the Himalaya)',
+    blurb:
+      'Renowned for crossing the Himalaya at extreme altitude, migrating between Central Asian breeding lakes and South Asian wintering grounds.',
+  },
+  {
+    id: 'seal',
+    query: 'elephant seal',
+    match: 'seal',
+    common: 'Elephant Seal',
+    region: 'North Pacific',
+    blurb:
+      'A deep-diving marine mammal that ranges thousands of kilometres across the open ocean between haul-out beaches and rich foraging grounds.',
+  },
+  {
+    id: 'shark',
+    query: 'white shark',
+    match: 'shark',
+    common: 'Shark',
+    region: 'Open ocean',
+    blurb:
+      'A wide-ranging ocean predator whose satellite tracks reveal long, purposeful movements across entire ocean basins.',
+  },
+  {
+    id: 'penguin',
+    query: 'penguin',
+    match: 'penguin',
+    common: 'Penguin',
+    region: 'Southern Ocean',
+    blurb:
+      'A flightless seabird that journeys remarkable distances at sea between colonies and foraging grounds in the cold Southern Ocean.',
+  },
+  {
+    id: 'elephant',
+    query: 'African elephant',
+    match: 'elephant',
+    common: 'African Elephant',
+    region: 'Sub-Saharan Africa',
+    blurb:
+      "The largest land animal, whose seasonal movements across Africa's landscapes are tracked to ease conflict and guide conservation.",
+  },
+  {
+    id: 'fruit_bat',
+    query: 'fruit bat',
+    match: 'bat',
+    common: 'Straw-coloured Fruit Bat',
+    region: 'Sub-Saharan Africa',
+    blurb:
+      "Africa's great mammal migration by air — fruit bats travel in vast numbers between roosts, dispersing seeds across the continent.",
   },
 ];
 

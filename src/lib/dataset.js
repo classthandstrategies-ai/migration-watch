@@ -22,6 +22,10 @@ const PALETTE = [
   '#9c7b3f', // bronze
   '#566246', // moss
   '#7a6f9b', // lavender slate
+  '#b07a55', // clay tan
+  '#456b5a', // deep teal-green
+  '#8f6f8a', // dusty mauve
+  '#705a3a', // umber
 ];
 
 export const dataset = {

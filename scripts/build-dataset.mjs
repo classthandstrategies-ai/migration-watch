@@ -202,6 +202,27 @@ const STUDIES = [
     minPoints: 20,
     minKm: 400,
   },
+  {
+    id: 'seal',
+    raw: 'raw/repo_seal.json',
+    source: 'repo',
+    species: 'California Sea Lion',
+    region: 'California Current, NE Pacific',
+    take: 8,
+    minPoints: 20,
+    minKm: 250,
+  },
+  {
+    id: 'fruit_bat',
+    raw: 'raw/repo_fruit_bat.json',
+    source: 'repo',
+    take: 6,
+    minPoints: 20,
+    minKm: 150,
+  },
+  // NOTE: Humboldt penguin data (study 1.725) was evaluated and deliberately
+  // excluded — its tracks are short coastal foraging trips, not migration, so
+  // including them would undermine the "migration" framing.
 ];
 
 function loadStudy(s) {

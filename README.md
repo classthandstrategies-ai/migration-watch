@@ -10,7 +10,7 @@ Migration Watch traces the journeys of GPS- and satellite-tagged wild animals
 across a calm, documentary-style world map. Press play and watch waved
 albatrosses loop out to the Humboldt Current, white storks pour down the western
 European flyway, blue whales range the Pacific and caribou cross the Arctic —
-every line is a journey that genuinely happened, drawn from 11 datasets the
+every line is a journey that genuinely happened, drawn from 13 datasets the
 researchers shared under open licences.
 
 > **Honest by design:** this is a **replay of real recorded historical data**,
@@ -37,7 +37,7 @@ researchers shared under open licences.
 
 ## ✨ Features
 
-- **Real tracking data** — genuine GPS/Argos fixes from **11 openly-licensed Movebank studies** spanning seabirds, raptors, shorebirds, waterfowl, a songbird, a land mammal, a sea turtle and a blue whale — bundled locally with full citations, DOIs and licences.
+- **Real tracking data** — genuine GPS/Argos fixes from **13 openly-licensed Movebank studies** spanning seabirds, raptors, shorebirds, waterfowl, a songbird, land and marine mammals, a fruit bat, a sea turtle and a blue whale — bundled locally with full citations, DOIs and licences.
 - **Animated path tracing** — each individual's route is progressively drawn along its real recorded coordinates as the timeline advances.
 - **Scrubbable timeline** — play/pause, drag to scrub, and 0.5×–4× playback speeds. Progress is a normalised _journey progress_ (the studies span different years), with the selected animal's **real head-position date** shown alongside.
 - **Click to inspect** — select any path or marker to see species, source study, total distance recorded, number of GPS fixes, tracking duration, dates, licence and DOI.
@@ -210,6 +210,8 @@ DOIs and licences also appear in the app's in-page **Sources** panel.
 - **Caribou** (_Rangifer tarandus_) — CC0 1.0. Seip DR, Price E (2019). Movebank Data Repository. https://doi.org/10.5441/001/1.p5bn656k
 - **Green Sea Turtle** (_Chelonia mydas_) — CC0 1.0. Hays GC, Esteban N, Rattray A (2024). Movebank Data Repository. https://doi.org/10.5441/001/1.313
 - **Blue Whale** (_Balaenoptera musculus_) — CC0 1.0. Mate BR, Palacios DM, Irvine LM, Follett TM (2019). Movebank Data Repository. https://doi.org/10.5441/001/1.5ph88fk2
+- **California Sea Lion** (_Zalophus californianus_) — CC0 1.0. Abrahms B (2017). Movebank Data Repository. https://doi.org/10.5441/001/1.hm5nk220
+- **Straw-coloured Fruit Bat** (_Eidolon helvum_) — CC0 1.0. Dechmann DKN, Fahr J, Wikelski M (2014). Movebank Data Repository. https://doi.org/10.5441/001/1.62s17b4v
 
 ### Software & assets
 
