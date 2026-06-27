@@ -2,8 +2,8 @@
 
 > An interactive map that replays **real, openly-licensed wildlife migration tracking data** from Movebank — fix by fix, the way it was actually recorded.
 
-[![CI](https://github.com/your-username/migration-watch/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/migration-watch/actions/workflows/ci.yml)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-username/migration-watch)
+[![CI](https://github.com/classthandstrategies-ai/migration-watch/actions/workflows/ci.yml/badge.svg)](https://github.com/classthandstrategies-ai/migration-watch/actions/workflows/ci.yml)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/classthandstrategies-ai/migration-watch)
 [![License: MIT](https://img.shields.io/badge/License-MIT-000000.svg)](LICENSE)
 
 Migration Watch traces the journeys of GPS- and satellite-tagged wild animals
@@ -70,7 +70,7 @@ No backend, no API keys, no database — the app is a fully static single-page a
 
 ```bash
 # 1. Clone
-git clone https://github.com/your-username/migration-watch.git
+git clone https://github.com/classthandstrategies-ai/migration-watch.git
 cd migration-watch
 
 # 2. Install dependencies
@@ -170,7 +170,7 @@ sets the framework (`vite`), build command (`npm run build`), output directory
 
 **One-click deploy:**
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-username/migration-watch)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/classthandstrategies-ai/migration-watch)
 
 It deploys just as cleanly to **Netlify** or **GitHub Pages** — it's a plain
 static build (`dist/`); only the redirect/rewrite config differs per host.
