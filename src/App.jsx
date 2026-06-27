@@ -92,7 +92,7 @@ export default function App() {
       {/* Floating transparent navigation. */}
       <header className="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-5">
         <a href="#top" className="flex items-center gap-2">
-          <img src="/leaf.svg" width="28" height="28" alt="" />
+          <img src={`${import.meta.env.BASE_URL}leaf.svg`} width="28" height="28" alt="" />
           <span className="font-display text-[22px] font-semibold text-ink-black">
             Migration&nbsp;Watch
           </span>

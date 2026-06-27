@@ -3,6 +3,7 @@
 > An interactive map that replays **real, openly-licensed wildlife migration tracking data** from Movebank — fix by fix, the way it was actually recorded.
 
 [![CI](https://github.com/classthandstrategies-ai/migration-watch/actions/workflows/ci.yml/badge.svg)](https://github.com/classthandstrategies-ai/migration-watch/actions/workflows/ci.yml)
+[![Deploy to Pages](https://github.com/classthandstrategies-ai/migration-watch/actions/workflows/deploy.yml/badge.svg)](https://github.com/classthandstrategies-ai/migration-watch/actions/workflows/deploy.yml)
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/classthandstrategies-ai/migration-watch)
 [![License: MIT](https://img.shields.io/badge/License-MIT-000000.svg)](LICENSE)
 
@@ -31,7 +32,10 @@ researchers shared under open licences.
 
 ## 🔗 Live demo
 
-> _Add your deployment URL here, e.g._ **https://migration-watch.vercel.app**
+**▶︎ https://classthandstrategies-ai.github.io/migration-watch/**
+
+Auto-deployed from `main` via GitHub Actions (GitHub Pages). The project is also
+one-click deployable to Vercel — see [Deployment](#-deployment).
 
 ---
 
@@ -172,8 +176,11 @@ sets the framework (`vite`), build command (`npm run build`), output directory
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/classthandstrategies-ai/migration-watch)
 
-It deploys just as cleanly to **Netlify** or **GitHub Pages** — it's a plain
-static build (`dist/`); only the redirect/rewrite config differs per host.
+**Live deploy:** this repo also auto-deploys to **GitHub Pages** on every push to
+`main` via [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) — that
+workflow builds with `GITHUB_PAGES=true` so Vite uses the `/migration-watch/`
+base path. The live demo above is that deploy. It runs just as cleanly on
+**Netlify**; it's a plain static build (`dist/`), only the host config differs.
 
 ## 📜 License
 
