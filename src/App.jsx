@@ -122,15 +122,15 @@ export default function App() {
       <section id="top" className="mx-auto max-w-[820px] px-6 pb-10 pt-8 text-center">
         <span className="inline-flex items-center gap-2 rounded-[46px] border border-charcoal/20 bg-bone-card px-3.5 py-1.5 font-rubik text-[12px] font-medium text-charcoal">
           <span className="h-2 w-2 rounded-full bg-sage-deep" aria-hidden="true" />
-          Real GPS data · {dataset.studies.length} open studies · {totalIndividuals} animals
+          Real tracking data · {dataset.studies.length} species · {totalIndividuals} animals
         </span>
         <h1 className="mt-6 font-display text-[44px] font-semibold leading-[1.12] text-ink-black sm:text-[58px] md:text-[68px]">
           Watch real animals cross the real world.
         </h1>
         <p className="mx-auto mt-6 max-w-[620px] font-rubik text-[19px] leading-[1.7] text-charcoal">
-          Every line below is a journey that actually happened — recorded fix by fix by GPS tags on
-          wild albatrosses and storks, shared openly by the researchers who tracked them. Press play
-          to retrace their migrations.
+          Every line below is a journey that actually happened — recorded fix by fix by GPS and
+          satellite tags on wild animals, from albatrosses to blue whales, shared openly by the
+          researchers who tracked them. Press play to retrace their migrations.
         </p>
       </section>
 
@@ -200,7 +200,7 @@ export default function App() {
             . Data is real and historical; this is a replay, not live tracking.
           </p>
           <p className="font-rubik text-[12px] text-charcoal">
-            Datasets © their researchers · released CC0 1.0
+            Datasets © their researchers · openly licensed (CC0 / CC BY-NC)
           </p>
         </div>
       </footer>

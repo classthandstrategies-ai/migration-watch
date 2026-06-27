@@ -33,6 +33,7 @@ pnpm-debug.log*
 *.sw?
 Thumbs.db
 
-# Raw Movebank API dumps (large; regenerate with `npm run build:data`).
-# The processed, committed dataset lives at src/data/tracks.json.
-scripts/raw_*.json
+# Raw Movebank dumps (~42 MB; regenerate with `npm run fetch:data` + the curl
+# commands in the README). The processed, committed dataset that the app ships
+# lives at src/data/tracks.json.
+scripts/raw/

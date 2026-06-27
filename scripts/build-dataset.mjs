@@ -1,22 +1,23 @@
 /**
  * build-dataset.mjs
  * --------------------------------------------------------------------------
- * Transforms the raw Movebank public-API responses (scripts/raw_*.json) into
- * the compact, attributed dataset the app ships with (src/data/tracks.json).
+ * Transforms the raw Movebank dumps in scripts/raw/ into the compact,
+ * attributed dataset the app ships with (src/data/tracks.json).
  *
- * The raw files were fetched from Movebank's public JSON service (no login,
- * fully open studies). See README "Data & attribution" for the exact URLs,
- * fetch dates, citations and licenses. Re-run with:  npm run build:data
+ * Two kinds of raw input, both shaped as { individuals: [{ locations: [...] }] }:
+ *   - api_*.json  — fetched from Movebank's public JSON API (metadata lives in
+ *                   the STUDIES manifest below).
+ *   - repo_*.json — fetched by fetch-repository.mjs from the Movebank Data
+ *                   Repository (carries a `meta` block with real attribution).
  *
- * What this does:
- *   - selects a readable subset of individuals per study (richest tracks)
- *   - computes real distance travelled (haversine) on the FULL-resolution fix
- *     sequence, so the reported kilometres reflect the actual recording
- *   - downsamples each track to <= MAX_POINTS vertices for smooth animation
- *   - rounds coordinates to 4 decimals (~11 m) to keep the bundle small
- *   - records real start/end dates, duration and a bounding box
+ * For every individual we:
+ *   - compute real distance travelled (haversine) on the FULL-resolution fixes,
+ *   - keep genuine migrants (per-study minimum distance / fix count),
+ *   - downsample to <= MAX_POINTS vertices for smooth animation,
+ *   - round coordinates to 4 decimals (~11 m) to keep the bundle small.
  *
  * No coordinates are invented or altered beyond rounding and downsampling.
+ * Re-fetch raw repository data first with: npm run fetch:data
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -25,9 +26,8 @@ import { dirname, resolve } from 'node:path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '..');
 
-const MAX_POINTS = 160; // vertices kept per track for the traced polyline
+const MAX_POINTS = 130; // vertices kept per track for the traced polyline
 
-// Great-circle distance between two [lon, lat] points, in kilometres.
 function haversineKm([lon1, lat1], [lon2, lat2]) {
   const R = 6371;
   const toRad = (d) => (d * Math.PI) / 180;
@@ -39,7 +39,6 @@ function haversineKm([lon1, lat1], [lon2, lat2]) {
   return 2 * R * Math.asin(Math.sqrt(a));
 }
 
-// Even index sampling that always keeps the first and last fix.
 function downsample(points, max) {
   if (points.length <= max) return points;
   const step = (points.length - 1) / (max - 1);
@@ -50,18 +49,20 @@ function downsample(points, max) {
 
 const round4 = (n) => Math.round(n * 1e4) / 1e4;
 
-/**
- * Turn one raw Movebank "individual" record into our compact track object,
- * or return null if the track is too short / not a real journey.
- */
+// Repository citations (mdr.citation.CSE) embed an HTML <a> tag around the DOI;
+// strip tags and collapse whitespace so the citation renders as clean text.
+const cleanText = (s) =>
+  (s || '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
 function buildTrack(ind, minPoints, minKm) {
-  // Sort by time and drop obvious null fixes.
   const locs = ind.locations
     .filter((l) => Number.isFinite(l.location_long) && Number.isFinite(l.location_lat))
     .sort((a, b) => a.timestamp - b.timestamp);
   if (locs.length < minPoints) return null;
 
-  // Real distance on the full-resolution sequence.
   let distanceKm = 0;
   for (let i = 1; i < locs.length; i++) {
     distanceKm += haversineKm(
@@ -84,7 +85,7 @@ function buildTrack(ind, minPoints, minKm) {
 
   return {
     id: ind.individual_local_identifier,
-    fixCount: locs.length, // real number of recorded fixes
+    fixCount: locs.length,
     distanceKm: Math.round(distanceKm),
     startDate: new Date(t0).toISOString(),
     endDate: new Date(t1).toISOString(),
@@ -94,11 +95,17 @@ function buildTrack(ind, minPoints, minKm) {
   };
 }
 
-// --- Study definitions (metadata is hand-verified, see README) -------------
+/**
+ * Study manifest. `take` caps individuals (longest journeys first); minPoints /
+ * minKm filter out residents and sparse tracks. API studies carry their own
+ * attribution here; repository studies inherit it from the raw file's `meta`.
+ */
 const STUDIES = [
+  // --- Public JSON API studies (attribution defined here) ---
   {
     id: 'albatross',
-    raw: 'raw_albatross.json',
+    raw: 'raw/api_albatross.json',
+    source: 'api',
     name: 'Galapagos Albatrosses',
     species: 'Waved Albatross',
     taxon: 'Phoebastria irrorata',
@@ -108,16 +115,16 @@ const STUDIES = [
     citation:
       'Cruz S, Proaño CB, Anderson D, Huyvaert K, Wikelski M (2013) Data from: The Environmental-Data Automated Track Annotation (Env-DATA) System. Movebank Data Repository.',
     region: 'Galápagos Archipelago ↔ Peru & Ecuador coast',
-    period: '2008 breeding season',
     blurb:
-      'Critically endangered seabirds breeding on Española Island in the Galápagos. Adults make multi-day foraging trips east to the nutrient-rich Humboldt Current upwelling off the South American coast, using tailwinds on the long return leg.',
-    take: 12, // number of individuals to keep
+      'Critically endangered seabirds breeding on Española Island that forage along the Humboldt Current upwelling off South America.',
+    take: 10,
     minPoints: 120,
     minKm: 300,
   },
   {
     id: 'stork',
-    raw: 'raw_stork.json',
+    raw: 'raw/api_stork.json',
+    source: 'api',
     name: 'LifeTrack White Stork SW Germany',
     species: 'White Stork',
     taxon: 'Ciconia ciconia',
@@ -127,25 +134,106 @@ const STUDIES = [
     citation:
       'Fiedler W, Flack A, Schäfle W, Keeves B, Quetting M, Eid B, Schmid H, Wikelski M (2019) Data from: Study "LifeTrack White Stork SW Germany" (2013-2019). Movebank Data Repository.',
     region: 'Lake Constance, SW Germany ↔ Iberia & sub-Saharan Africa',
-    // The 2019 DOI package covers 2013–2019; the live Movebank study is
-    // ongoing and the public API served fixes through 2025 on the fetch date.
-    period: '2013–2025 (ongoing study)',
     blurb:
-      'Storks tagged near Lake Constance follow the western European flyway: south through France and Spain, across the Strait of Gibraltar, and on to wintering grounds in West Africa. Many now winter short, lingering at Iberian landfills.',
-    take: 14,
+      'Storks following the western European flyway south through Iberia and across the Strait of Gibraltar into West Africa.',
+    take: 10,
     minPoints: 40,
-    minKm: 1200, // keep genuine long-distance migrants, not residents
+    minKm: 1200,
+  },
+  // --- Movebank Data Repository studies (attribution from file meta) ---
+  {
+    id: 'osprey',
+    raw: 'raw/repo_osprey.json',
+    source: 'repo',
+    take: 10,
+    minPoints: 30,
+    minKm: 1500,
+  },
+  { id: 'gull', raw: 'raw/repo_gull.json', source: 'repo', take: 10, minPoints: 40, minKm: 800 },
+  {
+    id: 'godwit',
+    raw: 'raw/repo_godwit.json',
+    source: 'repo',
+    take: 10,
+    minPoints: 30,
+    minKm: 800,
+  },
+  {
+    id: 'cuckoo',
+    raw: 'raw/repo_cuckoo.json',
+    source: 'repo',
+    species: 'African Cuckoo',
+    take: 6,
+    minPoints: 40,
+    minKm: 800,
+  },
+  { id: 'goose', raw: 'raw/repo_goose.json', source: 'repo', take: 7, minPoints: 30, minKm: 500 },
+  {
+    id: 'eagle',
+    raw: 'raw/repo_eagle.json',
+    source: 'repo',
+    species: 'Bald Eagle',
+    region: 'North America',
+    take: 6,
+    minPoints: 40,
+    minKm: 250,
+  },
+  {
+    id: 'caribou',
+    raw: 'raw/repo_caribou.json',
+    source: 'repo',
+    take: 10,
+    minPoints: 8,
+    minKm: 150,
+  },
+  {
+    id: 'green_turtle',
+    raw: 'raw/repo_green_turtle.json',
+    source: 'repo',
+    take: 8,
+    minPoints: 20,
+    minKm: 150,
+  },
+  {
+    id: 'blue_whale',
+    raw: 'raw/repo_blue_whale.json',
+    source: 'repo',
+    take: 8,
+    minPoints: 20,
+    minKm: 400,
   },
 ];
 
-const studies = STUDIES.map((s) => {
+function loadStudy(s) {
   const raw = JSON.parse(readFileSync(resolve(root, 'scripts', s.raw), 'utf8'));
   const tracks = raw.individuals
     .map((ind) => buildTrack(ind, s.minPoints, s.minKm))
     .filter(Boolean)
-    // longest journeys first, then keep the top `take`
     .sort((a, b) => b.distanceKm - a.distanceKm)
     .slice(0, s.take);
+  if (!tracks.length) {
+    console.warn(
+      `! ${s.id}: no tracks passed filters (minKm=${s.minKm}, minPoints=${s.minPoints})`
+    );
+    return null;
+  }
+
+  // Merge attribution: API studies from the manifest, repo studies from meta.
+  const m = raw.meta || {};
+  const meta = {
+    id: s.id,
+    name: s.name || m.name,
+    species: s.species || m.common || m.taxon,
+    taxon: s.taxon || m.taxon,
+    license: s.license || m.license,
+    doi: s.doi || m.doi,
+    doiUrl: s.doi ? `https://doi.org/${s.doi}` : m.doiUrl,
+    citation: cleanText(s.citation || m.citation),
+    region: s.region || m.region,
+    blurb: s.blurb || m.blurb,
+    studyId: s.studyId,
+    handle: m.handle,
+  };
 
   const all = tracks.flatMap((t) => t.points);
   const bbox = [
@@ -154,38 +242,38 @@ const studies = STUDIES.map((s) => {
     Math.max(...all.map((p) => p[0])),
     Math.max(...all.map((p) => p[1])),
   ];
+  const years = tracks.flatMap((t) => [
+    new Date(t.startDate).getUTCFullYear(),
+    new Date(t.endDate).getUTCFullYear(),
+  ]);
+  const y0 = Math.min(...years);
+  const y1 = Math.max(...years);
+  meta.period = y0 === y1 ? `${y0}` : `${y0}–${y1}`;
 
-  const { raw: _omit, take, minPoints, minKm, ...meta } = s;
-  return {
-    ...meta,
-    movebankUrl: `https://www.movebank.org/cms/webapp?gwt_fragment=page=studies,path=study${s.studyId}`,
-    doiUrl: `https://doi.org/${s.doi}`,
-    bbox,
-    tracks,
-  };
-});
+  return { ...meta, bbox, tracks };
+}
+
+const studies = STUDIES.map(loadStudy).filter(Boolean);
 
 const out = {
-  // Provenance is part of the data, not a side note.
-  source: 'Movebank (movebank.org) public data API',
-  fetchedFrom: 'https://www.movebank.org/movebank/service/public/json',
-  fetchDate: '2026-06-26',
-  dataKind: 'real recorded historical GPS tracking data — NOT live / real-time',
+  source: 'Movebank (movebank.org) — public data API + Movebank Data Repository',
+  fetchDate: '2026-06-27',
+  dataKind: 'real recorded historical GPS / Argos tracking data — NOT live / real-time',
   note: 'Coordinates rounded to 4 decimals and tracks downsampled for rendering; reported distances computed on full-resolution fixes.',
   studies,
 };
 
-const dest = resolve(root, 'src/data/tracks.json');
-writeFileSync(dest, JSON.stringify(out));
+writeFileSync(resolve(root, 'src/data/tracks.json'), JSON.stringify(out));
 
 const totalTracks = studies.reduce((n, s) => n + s.tracks.length, 0);
-const totalPts = studies.reduce((n, s) => n + s.tracks.reduce((m, t) => m + t.points.length, 0), 0);
-console.log(`Wrote ${dest}`);
-console.log(`Studies: ${studies.length} | tracks: ${totalTracks} | rendered points: ${totalPts}`);
+console.log(`Wrote src/data/tracks.json`);
+console.log(`Species/studies: ${studies.length} | individuals: ${totalTracks}`);
 studies.forEach((s) =>
   console.log(
-    `  ${s.species}: ${s.tracks.length} individuals, ${Math.min(
+    `  ${s.species.padEnd(26)} ${String(s.tracks.length).padStart(2)} inds | ${s.period.padEnd(
+      9
+    )} | ${Math.min(...s.tracks.map((t) => t.distanceKm))}–${Math.max(
       ...s.tracks.map((t) => t.distanceKm)
-    )}–${Math.max(...s.tracks.map((t) => t.distanceKm))} km`
+    )} km | ${s.license}`
   )
 );

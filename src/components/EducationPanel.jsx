@@ -50,10 +50,10 @@ export default function EducationPanel() {
               shifting food shift the journeys themselves.
             </p>
             <p>
-              The waved albatross shown here is critically endangered; the white stork is a
-              conservation success story that rebuilt its European range. Both stories were written
-              with data exactly like this — which is why open, well-attributed sharing of tracking
-              data is itself an act of conservation.
+              The species mapped here span the tree of life — a critically endangered albatross, a
+              blue whale, Arctic caribou, sea turtles and trans-Saharan songbirds — yet each story
+              was written with data exactly like this. That is why open, well-attributed sharing of
+              tracking data is itself an act of conservation.
             </p>
           </div>
         </div>
@@ -97,9 +97,20 @@ export default function EducationPanel() {
           >
             Movebank public data API
           </a>{' '}
-          on {dataset.fetchDate}. Both datasets are released under CC0 1.0; attribution is provided
-          here as good scholarly practice. This project is an independent visualisation and is not
-          affiliated with or endorsed by Movebank, the Max Planck Institute, or the data owners.
+          and the{' '}
+          <a
+            href="https://datarepository.movebank.org"
+            target="_blank"
+            rel="noreferrer"
+            className="text-ink-black underline underline-offset-2"
+          >
+            Movebank Data Repository
+          </a>{' '}
+          on {dataset.fetchDate}. Each dataset is released by its owners under the open licence
+          shown on its card above (mostly CC0 1.0; one is CC BY-NC 4.0). Attribution is provided
+          here as required and as good scholarly practice. This project is an independent
+          visualisation and is not affiliated with or endorsed by Movebank, the Max Planck
+          Institute, or the data owners.
         </p>
       </div>
     </section>

@@ -1,5 +1,5 @@
 dist
 node_modules
 src/data/tracks.json
-scripts/raw_*.json
+scripts/raw/
 package-lock.json

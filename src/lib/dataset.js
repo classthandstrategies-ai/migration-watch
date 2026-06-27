@@ -5,17 +5,31 @@
  */
 import data from '../data/tracks.json';
 
-// One colour per study. Both are drawn from the earthy palette — a deep sage
-// for the seabird, an ocean ink for the stork — never the pale mint accent,
-// which the design reserves for washes and halos.
-const STUDY_STYLE = {
-  albatross: { color: 'var(--color-sage-deep)', colorHex: '#5a8f63' },
-  stork: { color: 'var(--color-ocean-ink)', colorHex: '#2f5d6e' },
-};
+// A restrained, earthy "documentary" palette — one hue per species so the map
+// can distinguish them. These are deliberately muted and desaturated to sit
+// quietly on the linen canvas; the pale sage mint stays reserved for washes and
+// halos, never as a track colour.
+const PALETTE = [
+  '#5a8f63', // sage green
+  '#2f5d6e', // ocean teal
+  '#a6643c', // terracotta
+  '#6b7a3a', // olive
+  '#7d5a8c', // muted plum
+  '#c08a2d', // ochre
+  '#4a6b8a', // slate blue
+  '#8a4b4b', // brick
+  '#3f7d6e', // pine
+  '#9c7b3f', // bronze
+  '#566246', // moss
+  '#7a6f9b', // lavender slate
+];
 
 export const dataset = {
   ...data,
-  studies: data.studies.map((s) => ({ ...s, ...STUDY_STYLE[s.id] })),
+  studies: data.studies.map((s, i) => {
+    const colorHex = PALETTE[i % PALETTE.length];
+    return { ...s, color: colorHex, colorHex };
+  }),
 };
 
 // Flat list of every individual track, each carrying a back-reference to its
